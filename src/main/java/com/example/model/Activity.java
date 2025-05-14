@@ -1,6 +1,7 @@
 package com.example.model;
 
 import jakarta.persistence.*;
+import jdk.jfr.Category;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -22,4 +23,13 @@ public class Activity {
     private LocalDateTime finishedAt;
     @Column(name = "priority")
     private Integer priority;
+
+    @ManyToOne()
+    @JoinColumn(name="category_id", referencedColumnName = "id",
+            foreignKey =@ForeignKey(name="FK_activities_categories"))
+    private Category category;
+
+    @ManyToOne()
+    @JoinColumn(name="user_id")
+    private User user;
 }
