@@ -17,5 +17,7 @@ public class Category {
     private String name;
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
+    @Column(name="updated_at")
+    private LocalDateTime updatedAt;
 
 }
