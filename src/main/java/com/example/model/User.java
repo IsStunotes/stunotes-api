@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="users")
 public class User {
     @Id
