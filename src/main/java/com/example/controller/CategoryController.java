@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.model.Category;
-import com.example.service.AdminCategoryService;
+import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/categories")
-public class AdminCategoryController {
+public class CategoryController {
     void Hello() {System.out.println("eii from admincategoryct");}
-    private final AdminCategoryService adminCategoryService;
+    private final CategoryService adminCategoryService;
 
     @GetMapping
     public ResponseEntity<List<Category>> listCategories(){
