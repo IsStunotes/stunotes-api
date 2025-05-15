@@ -1,7 +1,7 @@
 package com.example.controller;
  import com.example.model.Comment;
  import com.example.model.Document;
- import com.example.model.Usuario;
+ import com.example.model.User;
  import com.example.service.DocumentService;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.web.bind.annotation.*;
@@ -33,12 +33,7 @@ public class DocumentController {
             documentService.deleteDocument(id);
         }
 
-        @GetMapping("/usuario/{usuarioId}")
-        public List<Document> getDocumentsByUsuario(@PathVariable Long usuarioId) {
-            Usuario usuario = new Usuario();
-            usuario.setId(usuarioId);
-            return documentService.getDocumentsByUsuario(usuario);
-        }
+
         @GetMapping("/{documentId}/comments")
         public List<Comment> getCommentsByDocumentId(@PathVariable Long documentId) {
             return documentService.getCommentsByDocumentId(documentId);

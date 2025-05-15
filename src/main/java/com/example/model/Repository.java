@@ -22,7 +22,7 @@ public class Repository {
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     @JsonManagedReference
-    private Usuario usuario;
+    private User usuario;
 
     @OneToMany (mappedBy = "repositorio", cascade = CascadeType.ALL)
     @JsonManagedReference

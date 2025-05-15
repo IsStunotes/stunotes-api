@@ -40,7 +40,7 @@ public class Document {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    private User usuario;
 
     public List<Comment> getComments() {
         return comentariosHechos;
