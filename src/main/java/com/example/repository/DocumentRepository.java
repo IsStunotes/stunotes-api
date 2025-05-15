@@ -1,4 +1,15 @@
 package com.example.repository;
+import com.example.model.Document;
+import com.example.model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DocumentRepository {
+
+import java.util.List;
+
+public interface DocumentRepository  extends JpaRepository<Document, Long> {
+
+    List<Document> findByRepositorioId(Long repositorioId);
+    List<Document> findByUsuario(Usuario usuario);
+
+
 }

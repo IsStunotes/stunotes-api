@@ -1,4 +1,11 @@
 package com.example.repository;
+import com.example.model.Comment;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommentRepository {
+import java.util.List;
+
+public interface CommentRepository  extends JpaRepository<Comment, Long> {
+    List<Comment> findByDocumentId(Long documentId);
+    List<Comment> findByUsuarioId(Long usuarioId);
+
 }
