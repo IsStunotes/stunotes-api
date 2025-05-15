@@ -14,9 +14,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/categories")
+@RequestMapping("/categories")
 public class CategoryController {
-    void Hello() {System.out.println("eii from admincategoryct");}
     private final CategoryService adminCategoryService;
 
     @GetMapping
