@@ -21,12 +21,13 @@ public class ActivityController {
 
     @GetMapping
     public ResponseEntity<Page<Activity>> listTasks(
-            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) String categoryName,
+            @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String sort,
             @PageableDefault(size = 15) Pageable pageable) {
 
-        if (filter != null) {
-            return ResponseEntity.ok(activityService.filterByCategory(filter, pageable));
+        if (categoryName != null) {
+            return ResponseEntity.ok(activityService.filterByCategory(categoryName, pageable));
         }
 
         if ("priority".equalsIgnoreCase(sort)) {
@@ -46,9 +47,9 @@ public class ActivityController {
         return new ResponseEntity<Activity>(activityService.create(activity), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Activity> updateTask(@PathVariable Integer id, @RequestBody Activity activity) {
-        return ResponseEntity.ok(activityService.update(id, activity));
+    @PatchMapping("/{id}")
+    public ResponseEntity<Activity> partialUpdate(@PathVariable Integer id, @RequestBody Activity updateActivity) {
+        return ResponseEntity.ok(activityService.update(id, updateActivity));
     }
 
     @DeleteMapping("/{id}")

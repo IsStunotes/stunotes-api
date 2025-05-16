@@ -16,11 +16,6 @@ import java.util.List;
 public class ActivityServiceImpl implements ActivityService {
     private final ActivityRespository activityRepository;
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<Activity> getAll() {
-        return activityRepository.findAll();
-    }
     @Override
     @Transactional(readOnly = true)
     public Page<Activity> paginate(Pageable pageable) {
@@ -62,8 +57,8 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Activity> filterByCategory(String courseName, Pageable pageable) {
-        return activityRepository.findByCategory_NameContainingIgnoreCase(courseName, pageable);
+    public Page<Activity> filterByCategory(String categoryName, Pageable pageable) {
+        return activityRepository.findByCategory(categoryName, pageable);
     }
 
     @Override

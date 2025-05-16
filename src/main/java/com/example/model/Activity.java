@@ -1,8 +1,6 @@
 package com.example.model;
 
 import jakarta.persistence.*;
-import com.example.model.Category;
-import com.example.model.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
