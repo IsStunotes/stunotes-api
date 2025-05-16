@@ -1,5 +1,5 @@
 package com.example.controller;
-import com.example.model.Comment;
+import com.example.model.entity.Comment;
 import com.example.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,31 +1,34 @@
-package com.example.model;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+package com.example.model.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
+import java.time.LocalDateTime;
+
+
 
 @Entity
-@Table(name = "repositorio")
+@Table(name = "comment")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class Repository {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonManagedReference
-    private User usuario;
+    private String contenido;
+    private LocalDateTime fecha;
 
-    @OneToMany (mappedBy = "repositorio", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Document> documentos;
+    @ManyToOne
+    @JsonBackReference
+    private Document document;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private User usuario;
 
 }

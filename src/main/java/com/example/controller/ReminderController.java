@@ -1,7 +1,7 @@
 package com.example.controller;
 
 
-import com.example.model.Reminder;
+import com.example.model.entity.Reminder;
 import com.example.service.ReminderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.model.Repository;
+import com.example.model.entity.Repository;
 import com.example.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

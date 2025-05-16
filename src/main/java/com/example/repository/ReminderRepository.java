@@ -1,7 +1,7 @@
 package com.example.repository;
 
 
-import com.example.model.Reminder;
+import com.example.model.entity.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

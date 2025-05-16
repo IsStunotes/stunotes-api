@@ -1,5 +1,5 @@
 package com.example.service;
-import com.example.model.Comment;
+import com.example.model.entity.Comment;
 import com.example.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

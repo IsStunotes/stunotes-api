@@ -1,6 +1,6 @@
 package com.example.repository;
-import com.example.model.Document;
-import com.example.model.User;
+import com.example.model.entity.Document;
+import com.example.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

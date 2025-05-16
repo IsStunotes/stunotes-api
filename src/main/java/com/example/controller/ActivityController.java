@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.model.Activity;
+import com.example.model.entity.Activity;
 import com.example.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,8 +9,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

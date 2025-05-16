@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.model.Category;
+import com.example.model.entity.Category;
 import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

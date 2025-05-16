@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.model.Reminder;
+import com.example.model.entity.Reminder;
 
 import java.util.List;
 
