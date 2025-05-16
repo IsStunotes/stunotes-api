@@ -22,7 +22,6 @@ public class ActivityController {
     @GetMapping
     public ResponseEntity<Page<Activity>> listTasks(
             @RequestParam(required = false) String categoryName,
-            @RequestParam(required = false) String courseName,
             @RequestParam(required = false) String sort,
             @PageableDefault(size = 15) Pageable pageable) {
 
