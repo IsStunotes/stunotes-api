@@ -30,7 +30,7 @@ public class CommentController {
         return commentService.getCommentsByDocumentId(documentId);
     }
     @GetMapping("/usuario/{usuarioId}")
-    public List<Comment> getCommentsByUsuarioId(@PathVariable Long usuarioId) {
+    public List<Comment> getCommentsByUsuarioId(@PathVariable Integer usuarioId) {
         return commentService.getCommentsByUsuarioId(usuarioId);
     }
 }

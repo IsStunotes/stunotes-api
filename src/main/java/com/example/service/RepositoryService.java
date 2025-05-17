@@ -27,7 +27,7 @@ public class RepositoryService {
         repositoryRepository.deleteById(id);
     }
 
-    public List<Repository> getRepositoriesByUsuarioId(Long usuarioId) {
+    public List<Repository> getRepositoriesByUsuarioId(Integer usuarioId) {
         return repositoryRepository.findByUsuarioId(usuarioId);
     }
 
