@@ -25,7 +25,7 @@ public class CommentService {
     public List<Comment> getCommentsByDocumentId(Long documentId) {
         return commentRepository.findByDocumentId(documentId);
     }
-    public List<Comment> getCommentsByUsuarioId(Long usuarioId) {
+    public List<Comment> getCommentsByUsuarioId(Integer usuarioId) {
         return commentRepository.findByUsuarioId(usuarioId);
     }
 }

@@ -33,7 +33,7 @@ public class RepositoryController {
     }
 
     @GetMapping("/usuario/{usuarioId}")
-    public List<Repository> getRepositoriesByUsuarioId(@PathVariable Long usuarioId) {
+    public List<Repository> getRepositoriesByUsuarioId(@PathVariable Integer usuarioId) {
         return repositoryService.getRepositoriesByUsuarioId(usuarioId);
     }
 
