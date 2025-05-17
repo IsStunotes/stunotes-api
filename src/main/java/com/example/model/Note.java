@@ -3,6 +3,8 @@ package com.example.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "notes")
@@ -16,6 +18,12 @@ public class Note {
 
     @Column(name="content")
     private String content;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @ManyToOne()
     @JoinColumn(name = "collection_id", referencedColumnName = "id",

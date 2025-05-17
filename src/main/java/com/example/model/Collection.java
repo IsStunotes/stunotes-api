@@ -16,12 +16,12 @@ public class Collection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(name = "name", nullable = false,length = 255)
     private String name;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @ManyToOne()
     @JoinColumn(name="user_id", referencedColumnName = "id",
