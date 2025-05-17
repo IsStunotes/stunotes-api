@@ -2,12 +2,16 @@ package com.example.controller;
 
 
 import com.example.model.Reminder;
+import com.example.service.ReminderExportService;
 import com.example.service.ReminderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -15,6 +19,7 @@ import java.util.List;
 @RequestMapping("/reminder")
 public class ReminderController {
     private final ReminderService reminderService;
+    private final ReminderExportService reminderExportService;
 
     @GetMapping
     public ResponseEntity<List<Reminder>> listReminder() {
@@ -43,6 +48,28 @@ public class ReminderController {
     public ResponseEntity<Reminder> deleteReminder (@PathVariable("id") Integer id){
         reminderService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+
+    @GetMapping("/{id}/export-pdf")
+    public ResponseEntity<byte[]> exportReminderAsPdf(@PathVariable Integer id) {
+        Reminder reminder = reminderService.findById(id);
+        if (reminder == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ByteArrayInputStream bis = reminderExportService.generatePdf(reminder);
+
+        HttpHeaders headers = new HttpHeaders();
+        String filename = "horario_" + reminder.getActivity().getTitle().replace(" ", "_") + "_" + reminder.getDateTime().toLocalDate() + ".pdf";
+        headers.add("Content-Disposition", "inline; filename=" + filename);
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(bis.readAllBytes());
     }
 }
 
