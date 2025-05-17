@@ -58,7 +58,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional(readOnly = true)
     public Page<Activity> filterByCategory(String categoryName, Pageable pageable) {
-        return activityRepository.findByCategory(categoryName, pageable);
+        return activityRepository.findByCategory_Name(categoryName, pageable);
     }
 
     @Override
