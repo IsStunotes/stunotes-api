@@ -17,25 +17,15 @@ public class User {
     private String email;
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonBackReference("user-teacher")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Teacher teacher;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonBackReference("user-student")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Student student;
 
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name="role_id", referencedColumnName = "id")
-    //private Role role;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private ERole role;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="role_id", referencedColumnName = "id")
+    private Role role;
 
-    @OneToOne (mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonBackReference("user-repositorio")
-    private Repository repositorio;
 
-    public void setCreatedAt(LocalDateTime now) {
-    }
 }
