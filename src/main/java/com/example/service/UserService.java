@@ -1,13 +1,15 @@
 package com.example.service;
 
-import com.example.model.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import com.example.dto.UserProfileDTO;
+import com.example.dto.UserRegistrationDTO;
 
 public interface UserService {
-    User registerUser(User user);
-    User loginUser(User user);
+    UserProfileDTO registerStudent(UserRegistrationDTO registrationDTO);
+
+    UserProfileDTO registerTeacher(UserRegistrationDTO registrationDTO);
+
+    UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO);
+
+    UserProfileDTO getUserProfileById(Integer id);
 }
 

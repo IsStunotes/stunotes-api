@@ -13,7 +13,7 @@ public interface StudentRepository extends JpaRepository<Student,Integer> {
 
     Optional<Student> findByNameAndLastName(String name, String lastName);
 
-    //Actualizacion de datos del estudiante
+    //Si existe un cliente con mismo nombre y apellido, excepto el usuario actual
     boolean existsByNameAndLastNameAndUserIdNot(String name, String lastName, Integer userId);
 
     List<Student> findByGroup(Group group);

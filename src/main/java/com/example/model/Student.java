@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 public class Student {
@@ -19,8 +21,13 @@ public class Student {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @OneToOne
-    @JsonManagedReference(value = "user-student")
     @JoinColumn(name="user_id", referencedColumnName = "id")
     private User user;
 }
