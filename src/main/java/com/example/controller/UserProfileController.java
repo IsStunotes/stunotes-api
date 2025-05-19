@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dto.UserProfileDTO;
 import com.example.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class UserProfileController {
 
     //Actualizar el pefil de usuario
     @PutMapping("/{id}")
-    public ResponseEntity<UserProfileDTO> updateUserProfile(@PathVariable Integer id, @RequestBody UserProfileDTO userProfileDTO) {
+    public ResponseEntity<UserProfileDTO> updateProfile(@PathVariable Integer id, @Valid @RequestBody UserProfileDTO userProfileDTO) {
         UserProfileDTO updatedProfile = userService.updateUserProfile(id, userProfileDTO);
         return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
     }
