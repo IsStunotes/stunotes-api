@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name="users")
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
