@@ -1,36 +1,48 @@
 package com.example.controller;
-import com.example.model.Comment;
+
+import com.example.dto.request.CommentRequest;
+import com.example.dto.response.CommentResponse;
 import com.example.service.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
+
     @Autowired
     private CommentService commentService;
+
     @GetMapping
-    public List<Comment> getAllComments() {
+    public List<CommentResponse> getAllComments() {
         return commentService.getAllComments();
     }
+
     @PostMapping
-    public Comment saveComment(@RequestBody Comment comment) {
-        return commentService.saveComment(comment);
+    public CommentResponse saveComment(@RequestBody @Valid CommentRequest request) {
+        return commentService.saveComment(request);
     }
+
     @GetMapping("/{id}")
-    public Comment getCommentById(@PathVariable Long id) {
+    public CommentResponse getCommentById(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
+
     @DeleteMapping("/{id}")
     public void deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
     }
+
     @GetMapping("/document/{documentId}")
-    public List<Comment> getCommentsByDocumentId(@PathVariable Long documentId) {
+    public List<CommentResponse> getCommentsByDocumentId(@PathVariable Long documentId) {
         return commentService.getCommentsByDocumentId(documentId);
     }
+
     @GetMapping("/usuario/{usuarioId}")
-    public List<Comment> getCommentsByUsuarioId(@PathVariable Integer usuarioId) {
+    public List<CommentResponse> getCommentsByUsuarioId(@PathVariable Integer usuarioId) {
         return commentService.getCommentsByUsuarioId(usuarioId);
     }
 }

@@ -1,48 +1,76 @@
 package com.example.controller;
- import com.example.model.Comment;
- import com.example.model.Document;
- import com.example.model.User;
- import com.example.service.DocumentService;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.web.bind.annotation.*;
- import java.util.List;
- @RestController
- @RequestMapping("/documents")
 
+import com.example.dto.request.DocumentRequest;
+import com.example.dto.response.CommentResponse;
+import com.example.dto.response.DocumentResponse;
+import com.example.service.DocumentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/documents")
 public class DocumentController {
-        @Autowired
-        private DocumentService documentService;
 
-        @GetMapping
-        public List<Document> getAllDocuments() {
-            return documentService.getAllDocuments();
-        }
+    @Autowired
+    private DocumentService documentService;
 
-        @PostMapping
-        public Document saveDocument(@RequestBody Document document) {
-            return documentService.saveDocument(document);
-        }
+    // POST: Crear un documento
+    @PostMapping
+    public ResponseEntity<DocumentResponse> createDocument(@RequestBody DocumentRequest request) {
+        DocumentResponse response = documentService.saveDocument(request);
+        return ResponseEntity.ok(response);
+    }
 
-        @GetMapping("/{id}")
-        public Document getDocumentById(@PathVariable Long id) {
-            return documentService.getDocumentById(id);
-        }
+    // GET: Obtener todos los documentos
+    @GetMapping
+    public ResponseEntity<List<DocumentResponse>> getAllDocuments() {
+        return ResponseEntity.ok(documentService.getAllDocuments());
+    }
 
-        @DeleteMapping("/{id}")
-        public void deleteDocument(@PathVariable Long id) {
-            documentService.deleteDocument(id);
-        }
+    // GET: Obtener documento por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<DocumentResponse> getDocumentById(@PathVariable Long id) {
+        DocumentResponse response = documentService.getDocumentById(id);
+        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+    }
 
+    // DELETE: Eliminar documento por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDocument(@PathVariable Long id) {
+        documentService.deleteDocument(id);
+        return ResponseEntity.noContent().build();
+    }
 
-        @GetMapping("/{documentId}/comments")
-        public List<Comment> getCommentsByDocumentId(@PathVariable Long documentId) {
-            return documentService.getCommentsByDocumentId(documentId);
-        }
-        @GetMapping("/repositorio/{repositorioId}")
-        public List<Document> getDocumentsByRepositorioId(@PathVariable Long repositorioId) {
-            return documentService.getDocumentsByRepositorioId(repositorioId);
-        }
+    // GET: Obtener comentarios por documento
+    @GetMapping("/{documentId}/comments")
+    public ResponseEntity<List<CommentResponse>> getCommentsByDocumentId(@PathVariable Long documentId) {
+        return ResponseEntity.ok(documentService.getCommentsByDocumentId(documentId));
+    }
 
+    // GET: Obtener documentos por repositorio
+    @GetMapping("/repositorio/{repositorioId}")
+    public ResponseEntity<List<DocumentResponse>> getDocumentsByRepositorioId(@PathVariable Long repositorioId) {
+        return ResponseEntity.ok(documentService.getDocumentsByRepositorioId(repositorioId));
+    }
 
-
+    // Get: Obtener documentos por usuario
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<DocumentResponse>> getDocumentsByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(documentService.getDocumentsByUserId(userId));
+    }
+    // getDocumentByVersion
+    @GetMapping("/{documentId}/version/{version}")
+    public ResponseEntity<DocumentResponse> getDocumentByVersion(@PathVariable Long documentId, @PathVariable Long version) {
+        DocumentResponse response = documentService.getDocumentByVersion(documentId, version);
+        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+    }
+    //borrar documento por version
+    @DeleteMapping("/{documentId}/version/{version}")
+    public ResponseEntity<Void> deleteDocumentByVersion(@PathVariable Long documentId, @PathVariable Long version) {
+        documentService.deleteDocumentByVersion(documentId, version);
+        return ResponseEntity.noContent().build();
+    }
 }
