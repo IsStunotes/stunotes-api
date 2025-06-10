@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -69,6 +70,8 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher("/repositories")).permitAll()
                         .requestMatchers(antMatcher("/repositories/{id}")).permitAll()
                         .requestMatchers(antMatcher("/repositories/usuario/{usuarioId}")).permitAll()
+                        .requestMatchers(antMatcher("/documents/user/{userId}")).permitAll()
+                        .requestMatchers(antMatcher("/documents/{documentId}/version/{version}")).permitAll()
 
                         .requestMatchers("/api/v1/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         // TODO: Cualquier otra solicitud requiere autenticación (JWT u otra autenticación configurada)

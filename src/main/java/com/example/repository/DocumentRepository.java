@@ -10,6 +10,9 @@ public interface DocumentRepository  extends JpaRepository<Document, Long> {
 
     List<Document> findByRepositorioId(Long repositorioId);
     List<Document> findByUsuario(User usuario);
+    List<Document> findByUsuarioId(Integer usuarioId);
+    boolean existsByTitleAndRepositorio_Id(String title, Long repositorioId);
+    List<Document> findByIdAndVersion(Long version, Long id);
 
 
 }
