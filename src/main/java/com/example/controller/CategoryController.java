@@ -1,10 +1,14 @@
 package com.example.controller;
 
-import com.example.model.Category;
+import com.example.dto.request.CategoryRequest;
+import com.example.dto.response.CategoryResponse;
 import com.example.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,44 +18,55 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/categories")
-public class AdminCategoryController {
-    private final CategoryService adminCategoryService;
+@RequestMapping("/api/categories")
+public class CategoryController {
+    private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> listCategories(){
-        return ResponseEntity.ok(adminCategoryService.getAll());
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.getAll();
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<Category>> pageCategories(
-            @PageableDefault(size = 5, sort = "name") Pageable pageable){
-        Page<Category> categories = adminCategoryService.paginate(pageable);
-        return new ResponseEntity<Page<Category>>(categories, HttpStatus.OK);
+    public ResponseEntity<Page<CategoryResponse>> getCategoriesWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase("desc") ?
+                Sort.by(sortBy).descending() :
+                Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<CategoryResponse> categories = categoryService.paginate(pageable);
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable ("id") Integer id){
-        Category category = adminCategoryService.findById(id);
-        return new ResponseEntity<Category>(category, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable("id") Integer id) {
+        CategoryResponse category = categoryService.findById(id);
+        return ResponseEntity.ok(category);
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategoryById(@RequestBody Category category){
-        Category newCategory = adminCategoryService.create(category);
+    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest request) {
+        CategoryResponse newCategory = categoryService.create(request);
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") Integer id,
-                                                   @RequestBody Category category){
-        Category updateCategory = adminCategoryService.update(id,category);
-        return new ResponseEntity<>(updateCategory, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @PathVariable("id") Integer id,
+            @Valid @RequestBody CategoryRequest request) {
+        CategoryResponse updatedCategory = categoryService.update(id, request);
+        return ResponseEntity.ok(updatedCategory);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> deleteCategoryById(@PathVariable ("id") Integer id){
-        adminCategoryService.delete(id);
-        return new ResponseEntity<Category>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") Integer id) {
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
