@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class AdminCategoryServiceImpl implements AdminCategoryService {
+public class AdminCategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
