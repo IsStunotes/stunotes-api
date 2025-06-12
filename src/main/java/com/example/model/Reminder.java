@@ -1,7 +1,7 @@
 package com.example.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,10 +9,13 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table (name="reminder")
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Reminder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name="DateTime",nullable = false)
     private LocalDateTime dateTime;
