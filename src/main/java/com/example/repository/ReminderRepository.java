@@ -21,4 +21,9 @@ public interface ReminderRepository extends JpaRepository<Reminder, Integer> {
     @Query("SELECT r FROM Reminder r WHERE r.dateTime > :currentDateTime")
     List<Reminder> findFutureReminders(@Param("currentDateTime") LocalDateTime currentDateTime);
 
+    @Query("SELECT r FROM Reminder r WHERE r.dateTime BETWEEN :startDate AND :endDate")
+    List<Reminder> findByDateTimeBetween(@Param("startDate") LocalDateTime startDate,
+                                         @Param("endDate") LocalDateTime endDate);
+
+
 }

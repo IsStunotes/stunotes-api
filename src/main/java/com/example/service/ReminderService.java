@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -87,12 +89,34 @@ public class ReminderService {
         reminderRepository.delete(reminder);
     }
 
+    //Eliminación recordatorio después de fecha
     @Transactional(readOnly = true)
     public ReminderResponse getById(@NotNull Integer id) {
-        return reminderRepository.findById(id)
-                .map(reminderMapper::toResponse)
+        Reminder reminder = reminderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado"));
+
+        if (reminder.getDateTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("El recordatorio ya venció y no se puede recuperar");
+        }
+
+        return reminderMapper.toResponse(reminder);
     }
 
+
+
+
+    //Implementaciones para export
+    @Transactional(readOnly = true)
+    public List<ReminderResponse> getRemindersForWeek(LocalDate startDate) {
+        LocalDate endDate = startDate.plusDays(6); // semana desde el lunes (inclusive) hasta domingo
+
+        List<Reminder> reminders = reminderRepository.findByDateTimeBetween(
+                startDate.atStartOfDay(),
+                endDate.atTime(23, 59));
+
+        return reminders.stream()
+                .map(reminderMapper::toResponse)
+                .toList();
+    }
 
 }

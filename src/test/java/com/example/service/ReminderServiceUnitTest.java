@@ -115,4 +115,33 @@ public class ReminderServiceUnitTest {
 
         verify(reminderRepository).delete(reminder);
     }
+
+    //Implementación US: 13
+    @Test
+    void testGetById_Success() {
+        Reminder reminder = new Reminder();
+        reminder.setDateTime(LocalDateTime.now().plusDays(1));
+        ReminderResponse response = new ReminderResponse(1L, "Actividad", reminder.getDateTime());
+
+        when(reminderRepository.findById(1)).thenReturn(Optional.of(reminder));
+        when(reminderMapper.toResponse(reminder)).thenReturn(response);
+
+        ReminderResponse result = reminderService.getById(1);
+
+        assertNotNull(result);
+        assertEquals(1L, result.id());
+        verify(reminderRepository).findById(1);
+    }
+
+    @Test
+    void testGetById_PastReminder_ThrowsException() {
+        Reminder reminder = new Reminder();
+        reminder.setDateTime(LocalDateTime.now().minusDays(1));
+
+        when(reminderRepository.findById(1)).thenReturn(Optional.of(reminder));
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> reminderService.getById(1));
+        assertEquals("El recordatorio ya venció y no se puede recuperar", exception.getMessage());
+    }
+
 }
