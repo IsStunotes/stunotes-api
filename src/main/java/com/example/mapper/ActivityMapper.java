@@ -36,13 +36,19 @@ public class ActivityMapper {
                 activity.getCategory() != null ? activity.getCategory().getName() : null
         );
     }
-
     public void updateEntityFromRequest(Activity activity, ActivityRequest request) {
-        activity.setTitle(request.title());
-        activity.setDescription(request.description());
-        activity.setFinishedAt(request.finishedAt());
-        activity.setPriority(request.priority());
-
+        if (request.title() != null) {
+            activity.setTitle(request.title());
+        }
+        if (request.description() != null) {
+            activity.setDescription(request.description());
+        }
+        if (request.finishedAt() != null) {
+            activity.setFinishedAt(request.finishedAt());
+        }
+        if (request.priority() != null) {
+            activity.setPriority(request.priority());
+        }
         if (request.categoryId() != null) {
             Category category = new Category();
             category.setId(request.categoryId());
