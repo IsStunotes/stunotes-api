@@ -55,7 +55,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP01 - Crear categoría con datos válidos")
+    @DisplayName("CP23 - Crear categoría con datos válidos")
     void createCategory_validData_returnsCreated() {
         when(categoryMapper.toEntity(categoryRequest)).thenReturn(category);
         when(categoryRepository.save(any(Category.class))).thenReturn(category);
@@ -69,7 +69,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP02 - Listar todas las categorías")
+    @DisplayName("CP24 - Listar todas las categorías")
     void getAllCategories_withData_returnsList() {
         Category category2 = new Category();
         category2.setId(2);
@@ -88,7 +88,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP03 - Listar categorías sin datos")
+    @DisplayName("CP25 - Listar categorías sin datos")
     void getAllCategories_empty_returnsEmptyList() {
         when(categoryRepository.findAll()).thenReturn(Collections.emptyList());
 
@@ -98,7 +98,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP04 - Listar categorías con paginación")
+    @DisplayName("CP26 - Listar categorías con paginación")
     void paginateCategories_withData_returnsPage() {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Category> page = new PageImpl<>(List.of(category));
@@ -113,7 +113,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP05 - Obtener categoría por ID válido")
+    @DisplayName("CP27 - Obtener categoría por ID válido")
     void findCategoryById_found_returnsCategory() {
         when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
         when(categoryMapper.toResponse(category)).thenReturn(categoryResponse);
@@ -124,7 +124,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP06 - Obtener categoría inexistente")
+    @DisplayName("CP28 - Obtener categoría inexistente")
     void findCategoryById_notFound_throwsException() {
         when(categoryRepository.findById(99)).thenReturn(Optional.empty());
 
@@ -133,7 +133,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP07 - Actualizar categoría con datos válidos")
+    @DisplayName("CP29 - Actualizar categoría con datos válidos")
     void updateCategory_validData_returnsUpdated() {
         CategoryRequest updateRequest = new CategoryRequest("Estudios Avanzados");
         Category updatedCategory = new Category();
@@ -154,7 +154,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP08 - Actualizar categoría inexistente")
+    @DisplayName("CP30 - Actualizar categoría inexistente")
     void updateCategory_notFound_throwsException() {
         CategoryRequest updateRequest = new CategoryRequest("Nueva categoría");
         when(categoryRepository.findById(1)).thenReturn(Optional.empty());
@@ -164,7 +164,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP09 - Eliminar categoría existente")
+    @DisplayName("CP31 - Eliminar categoría existente")
     void deleteCategory_found_executesDelete() {
         when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
 
@@ -174,7 +174,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP10 - Eliminar categoría inexistente")
+    @DisplayName("CP32 - Eliminar categoría inexistente")
     void deleteCategory_notFound_throwsException() {
         when(categoryRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -183,7 +183,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP11 - Verificar que se establece createdAt al crear")
+    @DisplayName("CP33 - Verificar que se establece createdAt al crear")
     void createCategory_setsCreatedAt() {
         Category categoryWithoutDate = new Category();
         categoryWithoutDate.setName("Nueva Categoría");
@@ -202,7 +202,7 @@ public class CategoryServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP12 - Verificar que se establece updatedAt al actualizar")
+    @DisplayName("CP34 - Verificar que se establece updatedAt al actualizar")
     void updateCategory_setsUpdatedAt() {
         CategoryRequest updateRequest = new CategoryRequest("Categoría Actualizada");
 
