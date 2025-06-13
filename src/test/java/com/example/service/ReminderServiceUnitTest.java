@@ -108,7 +108,7 @@ public class ReminderServiceUnitTest {
     // US12 - Editar y eliminar recordatorios
 
     @Test
-    @DisplayName("CP - Editar recordatorio creado valido")
+    @DisplayName("CP70 - Editar recordatorio creado valido")
     void testUpdateReminder_Success() {
         ReminderRequest request = new ReminderRequest(1L, 100, LocalDateTime.now().plusDays(1));
         Activity activity = new Activity();
@@ -130,7 +130,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Editar recordatorio creado invalido (datos faltantes)")
+    @DisplayName("CP71 - Editar recordatorio creado invalido (datos faltantes)")
     void testUpdateReminder_PastDate_ThrowsException() {
         ReminderRequest request = new ReminderRequest(1L, 100, LocalDateTime.now().plusDays(1));
         Reminder existingReminder = new Reminder();
@@ -142,7 +142,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Cancelar edición, no debe guardar cambios")
+    @DisplayName("CP72 - Cancelar edición, no debe guardar cambios")
     void testCancelUpdate_DoesNotSaveChanges() {
         ReminderRequest request = new ReminderRequest(1L, 100, LocalDateTime.now().plusDays(2));
         Reminder existingReminder = new Reminder();
@@ -154,7 +154,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Editar recordatorio inexistente")
+    @DisplayName("CP73 - Editar recordatorio inexistente")
     void testUpdateReminder_NotFound_ThrowsException() {
         ReminderRequest request = new ReminderRequest(1L, 100, LocalDateTime.now().plusDays(1));
         when(reminderRepository.findById(1)).thenReturn(Optional.empty());
@@ -163,7 +163,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Eliminar recordatorio")
+    @DisplayName("CP74 - Eliminar recordatorio")
     void testDeleteReminder_Success() {
         Reminder reminder = new Reminder();
         reminder.setDateTime(LocalDateTime.now().plusDays(1));
@@ -176,7 +176,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Eliminar recordatorio invalido  ")
+    @DisplayName("CP75 - Eliminar recordatorio invalido  ")
     void testDeleteReminder_PastDate_ThrowsException() {
         Reminder reminder = new Reminder();
         reminder.setDateTime(LocalDateTime.now().minusDays(1));
@@ -187,7 +187,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Eliminar recordatorio que no existe")
+    @DisplayName("CP76 - Eliminar recordatorio que no existe")
     void testDeleteReminder_NotFound_ThrowsException() {
         when(reminderRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -195,7 +195,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Recuperar recordatorio eliminado no está permitido")
+    @DisplayName("CP77 - Recuperar recordatorio eliminado no está permitido")
     void testGetDeletedReminder_ThrowsException() {
         Reminder reminder = new Reminder();
         reminder.setDateTime(LocalDateTime.now().minusDays(2)); // Simula vencido
@@ -212,7 +212,7 @@ public class ReminderServiceUnitTest {
     // US13 - Obtener recordatorio por id (parte del flujo exportar horario)
 
     @Test
-    @DisplayName("CP - Obtener recordatorio por id valido")
+    @DisplayName("CP78 - Obtener recordatorio por id valido")
     void testGetById_Success() {
         Reminder reminder = new Reminder();
         reminder.setDateTime(LocalDateTime.now().plusDays(1));
@@ -229,7 +229,7 @@ public class ReminderServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP - Obtener recordatorio por id invalido")
+    @DisplayName("CP79 - Obtener recordatorio por id invalido")
     void testGetById_PastReminder_ThrowsException() {
         Reminder reminder = new Reminder();
         reminder.setDateTime(LocalDateTime.now().minusDays(1));
