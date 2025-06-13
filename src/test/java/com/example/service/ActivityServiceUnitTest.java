@@ -71,7 +71,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP01 - Crear tarea con datos válidos")
+    @DisplayName("CP07 - Crear tarea con datos válidos")
     void createActivity_validData_returnsCreated() {
         when(activityMapper.toEntity(activityRequest)).thenReturn(activity);
         when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
@@ -87,7 +87,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP02 - Crear tarea con categoría inexistente")
+    @DisplayName("CP08 - Crear tarea con categoría inexistente")
     void createActivity_categoryNotFound_throwsException() {
         when(activityMapper.toEntity(activityRequest)).thenReturn(activity);
         when(categoryRepository.findById(1)).thenReturn(Optional.empty());
@@ -97,7 +97,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP03 - Crear tarea sin categoría")
+    @DisplayName("CP09 - Crear tarea sin categoría")
     void createActivity_withoutCategory_returnsCreated() {
         ActivityRequest requestWithoutCategory = new ActivityRequest("Tarea sin categoría",
                 "Descripción", null, 2, null);
@@ -118,7 +118,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP04 - Listar tareas con paginación")
+    @DisplayName("CP010 - Listar tareas con paginación")
     void paginateActivities_withData_returnsPage() {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Activity> page = new PageImpl<>(List.of(activity));
@@ -134,7 +134,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP05 - Obtener tarea por ID válido")
+    @DisplayName("CP011 - Obtener tarea por ID válido")
     void findActivityById_found_returnsActivity() {
         when(activityRepository.findById(1)).thenReturn(Optional.of(activity));
         when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
@@ -146,7 +146,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP06 - Obtener tarea inexistente")
+    @DisplayName("CP012 - Obtener tarea inexistente")
     void findActivityById_notFound_throwsException() {
         when(activityRepository.findById(99)).thenReturn(Optional.empty());
 
@@ -154,7 +154,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP07 - Actualizar tarea con datos válidos")
+    @DisplayName("CP013 - Actualizar tarea con datos válidos")
     void updateActivity_validData_returnsUpdated() {
         ActivityRequest updateRequest = new ActivityRequest("Estudiar Spring",
                 "Conceptos avanzados", null, 2, 1);
@@ -177,7 +177,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP08 - Actualizar tarea inexistente")
+    @DisplayName("CP014 - Actualizar tarea inexistente")
     void updateActivity_notFound_throwsException() {
         ActivityRequest updateRequest = new ActivityRequest("Nueva tarea",
                 "Descripción", null, 1, 1);
@@ -187,7 +187,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP09 - Actualizar tarea con categoría inexistente")
+    @DisplayName("CP015 - Actualizar tarea con categoría inexistente")
     void updateActivity_categoryNotFound_throwsException() {
         ActivityRequest updateRequest = new ActivityRequest("Tarea actualizada",
                 "Descripción", null, 1, 99);
@@ -199,7 +199,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP10 - Eliminar tarea existente")
+    @DisplayName("CP16 - Eliminar tarea existente")
     void deleteActivity_found_executesDelete() {
         when(activityRepository.findById(1)).thenReturn(Optional.of(activity));
 
@@ -209,7 +209,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP11 - Eliminar tarea inexistente")
+    @DisplayName("CP17 - Eliminar tarea inexistente")
     void deleteActivity_notFound_throwsException() {
         when(activityRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -217,7 +217,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP12 - Filtrar tareas por categoría")
+    @DisplayName("CP18 - Filtrar tareas por categoría")
     void filterByCategory_withData_returnsFilteredPage() {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Activity> filteredPage = new PageImpl<>(List.of(activity));
@@ -232,7 +232,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP13 - Filtrar tareas por categoría sin resultados")
+    @DisplayName("CP19 - Filtrar tareas por categoría sin resultados")
     void filterByCategory_noResults_returnsEmptyPage() {
         Pageable pageable = PageRequest.of(0, 5);
         Page<Activity> emptyPage = new PageImpl<>(Collections.emptyList());
@@ -245,7 +245,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP14 - Ordenar tareas por prioridad")
+    @DisplayName("CP20 - Ordenar tareas por prioridad")
     void sortByPriority_returnsOrderedPage() {
         Activity lowPriority = new Activity();
         lowPriority.setPriority(1);
@@ -265,7 +265,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP15 - Marcar tarea como completada")
+    @DisplayName("CP21 - Marcar tarea como completada")
     void markAsCompleted_validId_returnsCompletedTask() {
         Activity completedActivity = new Activity();
         completedActivity.setId(1);
@@ -285,7 +285,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP16 - Marcar tarea inexistente como completada")
+    @DisplayName("CP22 - Marcar tarea inexistente como completada")
     void markAsCompleted_notFound_throwsException() {
         when(activityRepository.findById(99)).thenReturn(Optional.empty());
 
