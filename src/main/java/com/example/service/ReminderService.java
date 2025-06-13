@@ -38,6 +38,10 @@ public class ReminderService {
         if (request == null || request.dateTime() == null || request.activityId() == null){
             throw new IllegalArgumentException("Faltan completar datos");
         }
+
+        if (request.dateTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("La fecha del recordatorio debe ser futura");
+        }
         //Validacion de existencia de actividad
         Activity activity = activityRespository.findById(request.activityId())
                 .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
