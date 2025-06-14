@@ -25,7 +25,7 @@ public class Note {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne()
+    @ManyToOne(optional = false)
     @JoinColumn(name = "collection_id", referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "FK_notes_collections"))
     private Collection collection;
