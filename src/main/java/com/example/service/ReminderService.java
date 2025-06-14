@@ -7,7 +7,7 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.ReminderMapper;
 import com.example.model.Activity;
 import com.example.model.Reminder;
-import com.example.repository.ActivityRespository;
+import com.example.repository.ActivityRepository;
 import com.example.repository.ReminderRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ReminderService {
 
     private final ReminderRepository reminderRepository;
-    private final ActivityRespository activityRespository;
+    private final ActivityRepository activityRepository;
     private final ReminderMapper reminderMapper;
 
 
@@ -43,7 +43,7 @@ public class ReminderService {
             throw new IllegalArgumentException("La fecha del recordatorio debe ser futura");
         }
         //Validacion de existencia de actividad
-        Activity activity = activityRespository.findById(request.activityId())
+        Activity activity = activityRepository.findById(request.activityId())
                 .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
 
         Reminder reminder = reminderMapper.toEntity(request, activity);
@@ -70,7 +70,7 @@ public class ReminderService {
         }
 
         //Valida que la actividad exista
-        Activity activity = activityRespository.findById(request.activityId())
+        Activity activity = activityRepository.findById(request.activityId())
                 .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
 
         Reminder updatedReminder = reminderMapper.toEntity(request, activity);

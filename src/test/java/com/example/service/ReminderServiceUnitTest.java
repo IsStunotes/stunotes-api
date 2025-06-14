@@ -6,12 +6,11 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.ReminderMapper;
 import com.example.model.Activity;
 import com.example.model.Reminder;
-import com.example.repository.ActivityRespository;
+import com.example.repository.ActivityRepository;
 import com.example.repository.ReminderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class ReminderServiceUnitTest {
 
     @Mock private ReminderRepository reminderRepository;
-    @Mock private ActivityRespository activityRespository;
+    @Mock private ActivityRepository activityRepository;
     @Mock private ReminderMapper reminderMapper;
     @InjectMocks private ReminderService reminderService;
 
@@ -42,7 +41,7 @@ public class ReminderServiceUnitTest {
         Reminder reminder = new Reminder();
         ReminderResponse response = new ReminderResponse(1L, "Actividad", request.dateTime());
 
-        when(activityRespository.findById(100)).thenReturn(Optional.of(activity));
+        when(activityRepository.findById(100)).thenReturn(Optional.of(activity));
         when(reminderMapper.toEntity(request, activity)).thenReturn(reminder);
         when(reminderRepository.save(reminder)).thenReturn(reminder);
         when(reminderMapper.toResponse(reminder)).thenReturn(response);
@@ -69,7 +68,7 @@ public class ReminderServiceUnitTest {
     void testCreateReminder_PastDate_ThrowsException() {
         ReminderRequest request = new ReminderRequest(1L, 100, LocalDateTime.now().minusDays(1));
         Activity activity = new Activity();
-        when(activityRespository.findById(100)).thenReturn(Optional.of(activity));
+        when(activityRepository.findById(100)).thenReturn(Optional.of(activity));
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             reminderService.create(request);
@@ -94,7 +93,7 @@ public class ReminderServiceUnitTest {
     @DisplayName("CP39 - Crear recordatorio con actividad no encontrada")
     void testCreateReminder_ActivityNotFound_ThrowsException() {
         ReminderRequest request = new ReminderRequest(1L, 999, LocalDateTime.now().plusDays(1));
-        when(activityRespository.findById(999)).thenReturn(Optional.empty());
+        when(activityRepository.findById(999)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
             reminderService.create(request);
@@ -118,7 +117,7 @@ public class ReminderServiceUnitTest {
         ReminderResponse response = new ReminderResponse(1L, "Actividad", request.dateTime());
 
         when(reminderRepository.findById(1)).thenReturn(Optional.of(existingReminder));
-        when(activityRespository.findById(100)).thenReturn(Optional.of(activity));
+        when(activityRepository.findById(100)).thenReturn(Optional.of(activity));
         when(reminderMapper.toEntity(request, activity)).thenReturn(updatedReminder);
         when(reminderRepository.save(updatedReminder)).thenReturn(updatedReminder);
         when(reminderMapper.toResponse(updatedReminder)).thenReturn(response);

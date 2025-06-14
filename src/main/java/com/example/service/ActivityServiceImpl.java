@@ -6,7 +6,7 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.ActivityMapper;
 import com.example.model.Activity;
 import com.example.model.Category;
-import com.example.repository.ActivityRespository;
+import com.example.repository.ActivityRepository;
 import com.example.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
-    private final ActivityRespository activityRepository;
+    private final ActivityRepository activityRepository;
     private final CategoryRepository categoryRepository;
     private final ActivityMapper activityMapper;
 
