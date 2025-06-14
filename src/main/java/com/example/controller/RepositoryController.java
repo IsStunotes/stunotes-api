@@ -4,12 +4,14 @@ import com.example.dto.request.RepositoryRequest;
 import com.example.dto.response.RepositoryResponse;
 import com.example.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/repositories")
+@PreAuthorize("hasAnyRole('STUDENT','TEACHER','ADMIN')")
 public class RepositoryController {
 
     @Autowired

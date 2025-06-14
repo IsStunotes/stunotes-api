@@ -5,12 +5,14 @@ import com.example.dto.response.CommentResponse;
 import com.example.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/comments")
+@PreAuthorize("hasRole('TEACHER')")
 public class CommentController {
 
     @Autowired

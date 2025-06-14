@@ -1,12 +1,14 @@
-package com.example;
+package com.example.service;
 
-import com.example.dto.*;
+import com.example.dto.request.LoginDTO;
+import com.example.dto.request.UserRegistrationDTO;
+import com.example.dto.response.AuthResponseDTO;
+import com.example.dto.response.UserProfileDTO;
 import com.example.mapper.UserMapper;
 import com.example.model.*;
 import com.example.repository.*;
 import com.example.security.TokenProvider;
 import com.example.security.UserPrincipal;
-import com.example.service.UserServiceImpl;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.security.authentication.*;
