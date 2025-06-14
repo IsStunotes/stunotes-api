@@ -5,7 +5,7 @@ import com.example.dto.response.ActivityResponse;
 import com.example.mapper.ActivityMapper;
 import com.example.model.Activity;
 import com.example.model.Category;
-import com.example.repository.ActivityRespository;
+import com.example.repository.ActivityRepository;
 import com.example.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.*;
 public class ActivityServiceUnitTest {
 
     @Mock
-    private ActivityRespository activityRepository;
+    private ActivityRepository activityRepository;
 
     @Mock
     private CategoryRepository categoryRepository;
