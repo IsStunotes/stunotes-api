@@ -10,11 +10,12 @@ services:
       - db 
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stunotes_db 
-      - SPRING_DATASOURCE_USERNAME=postgres - SPRING_DATASOURCE_PASSWORD=adminadmin 
+      - SPRING_DATASOURCE_USERNAME=postgres 
+      - SPRING_DATASOURCE_PASSWORD=adminadmin 
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
 
   db:
-    image: postgres:latest
+    image: postgres:17
     container_name: postgres-db
     ports:
       - "5432:5432"
