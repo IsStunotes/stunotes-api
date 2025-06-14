@@ -31,7 +31,9 @@ public class CollectionServiceImpl implements CollectionService {
             // Manejo de exception
             throw new DuplicateResourceException("Ya existe una colección con ese nombre");
         }
-        Collection saved = collectionRepository.save(collectionMapper.toEntity(request));
+        Collection collection = collectionMapper.toEntity(request);
+        collection.setCreatedAt(LocalDateTime.now());
+        Collection saved = collectionRepository.save(collection);
         return collectionMapper.toResponse(saved);
     }
 

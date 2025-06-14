@@ -72,6 +72,8 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher("/repositories/usuario/{usuarioId}")).permitAll()
                         .requestMatchers(antMatcher("/documents/user/{userId}")).permitAll()
                         .requestMatchers(antMatcher("/documents/{documentId}/version/{version}")).permitAll()
+                        .requestMatchers(antMatcher("/collections")).permitAll()
+                        .requestMatchers(antMatcher("/collections/{id}")).permitAll()
 
                         .requestMatchers("/api/v1/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         // TODO: Cualquier otra solicitud requiere autenticación (JWT u otra autenticación configurada)

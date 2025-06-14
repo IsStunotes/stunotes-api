@@ -14,6 +14,6 @@ public class CollectionMapper {
     }
 
     public CollectionResponse toResponse(Collection collection) {
-        return new CollectionResponse(collection.getId(), collection.getName());
+        return new CollectionResponse(collection.getId(), collection.getName(), collection.getCreatedAt());
     }
 }
