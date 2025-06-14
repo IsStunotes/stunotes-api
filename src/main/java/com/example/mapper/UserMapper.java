@@ -1,9 +1,9 @@
 package com.example.mapper;
 
-import com.example.dto.AuthResponseDTO;
-import com.example.dto.LoginDTO;
-import com.example.dto.UserProfileDTO;
-import com.example.dto.UserRegistrationDTO;
+import com.example.dto.response.AuthResponseDTO;
+import com.example.dto.request.LoginDTO;
+import com.example.dto.response.UserProfileDTO;
+import com.example.dto.request.UserRegistrationDTO;
 import com.example.model.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -48,7 +48,11 @@ public class UserMapper {
         String lastName = (user.getStudent() != null) ? user.getStudent().getLastName()
                 : (user.getTeacher() != null) ? user.getTeacher().getLastName()
                 : "User";
+        Integer id = user.getId();
+        String email = user.getEmail();
 
+        authResponseDTO.setId(id);
+        authResponseDTO.setEmail(email);
         authResponseDTO.setName(name);
         authResponseDTO.setLastName(lastName);
 
