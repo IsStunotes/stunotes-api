@@ -1,6 +1,9 @@
 package com.example.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -9,13 +12,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="name",nullable = false,length = 50)
-    private String name;
-    @Column(name="lastName",nullable = false,length = 50)
-    private String lastName;
     @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING)
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Teacher teacher;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Student student;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="role_id", referencedColumnName = "id")
     private Role role;
+
+
 }

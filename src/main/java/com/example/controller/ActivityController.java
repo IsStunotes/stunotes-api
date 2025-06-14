@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dto.request.ActivityRequest;
+import com.example.dto.response.ActivityResponse;
 import com.example.model.Activity;
 import com.example.service.ActivityService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +22,13 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @GetMapping
-    public ResponseEntity<Page<Activity>> listTasks(
-            @RequestParam(required = false) String filter,
+    public ResponseEntity<Page<ActivityResponse>> listTasks(
+            @RequestParam(required = false) String categoryName,
             @RequestParam(required = false) String sort,
             @PageableDefault(size = 15) Pageable pageable) {
 
-        if (filter != null) {
-            return ResponseEntity.ok(activityService.filterByCategory(filter, pageable));
+        if (categoryName != null) {
+            return ResponseEntity.ok(activityService.filterByCategory(categoryName, pageable));
         }
 
         if ("priority".equalsIgnoreCase(sort)) {
@@ -37,18 +39,20 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Activity> getTask(@PathVariable Integer id) {
+    public ResponseEntity<ActivityResponse> getTask(@PathVariable Integer id) {
         return ResponseEntity.ok(activityService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Activity> createTask(@RequestBody Activity activity) {
-        return new ResponseEntity<Activity>(activityService.create(activity), HttpStatus.CREATED);
+    public ResponseEntity<ActivityResponse> createTask(@RequestBody ActivityRequest request) {
+        ActivityResponse response = activityService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Activity> updateTask(@PathVariable Integer id, @RequestBody Activity activity) {
-        return ResponseEntity.ok(activityService.update(id, activity));
+    @PatchMapping("/{id}")
+    public ResponseEntity<ActivityResponse> partialUpdate(@PathVariable Integer id, @RequestBody ActivityRequest request) {
+        ActivityResponse response = activityService.update(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
@@ -58,7 +62,7 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}/complete")
-    public ResponseEntity<Activity> markAsCompleted(@PathVariable("id") Integer id) {
+    public ResponseEntity<ActivityResponse> markAsCompleted(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(activityService.markAsCompleted(id));
     }
 }
