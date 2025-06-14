@@ -118,43 +118,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP010 - Listar tareas con paginación")
-    void paginateActivities_withData_returnsPage() {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Activity> page = new PageImpl<>(List.of(activity));
-        Page<ActivityResponse> expectedPage = new PageImpl<>(List.of(activityResponse));
-
-        when(activityRepository.findAll(pageable)).thenReturn(page);
-        when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
-
-        Page<ActivityResponse> result = activityService.paginate(pageable);
-
-        assertEquals(1, result.getContent().size());
-        assertEquals("Estudiar Java", result.getContent().get(0).title());
-    }
-
-    @Test
-    @DisplayName("CP011 - Obtener tarea por ID válido")
-    void findActivityById_found_returnsActivity() {
-        when(activityRepository.findById(1)).thenReturn(Optional.of(activity));
-        when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
-
-        ActivityResponse result = activityService.findById(1);
-
-        assertEquals("Estudiar Java", result.title());
-        assertEquals("Estudios", result.categoryName());
-    }
-
-    @Test
-    @DisplayName("CP012 - Obtener tarea inexistente")
-    void findActivityById_notFound_throwsException() {
-        when(activityRepository.findById(99)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> activityService.findById(99));
-    }
-
-    @Test
-    @DisplayName("CP013 - Actualizar tarea con datos válidos")
+    @DisplayName("CP012 - Actualizar tarea con datos válidos")
     void updateActivity_validData_returnsUpdated() {
         ActivityRequest updateRequest = new ActivityRequest("Estudiar Spring",
                 "Conceptos avanzados", null, 2, 1);
@@ -177,7 +141,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP014 - Actualizar tarea inexistente")
+    @DisplayName("CP013 - Actualizar tarea inexistente")
     void updateActivity_notFound_throwsException() {
         ActivityRequest updateRequest = new ActivityRequest("Nueva tarea",
                 "Descripción", null, 1, 1);
@@ -187,7 +151,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP015 - Actualizar tarea con categoría inexistente")
+    @DisplayName("CP014 - Actualizar tarea con categoría inexistente")
     void updateActivity_categoryNotFound_throwsException() {
         ActivityRequest updateRequest = new ActivityRequest("Tarea actualizada",
                 "Descripción", null, 1, 99);
@@ -199,7 +163,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP16 - Eliminar tarea existente")
+    @DisplayName("CP18 - Eliminar tarea existente")
     void deleteActivity_found_executesDelete() {
         when(activityRepository.findById(1)).thenReturn(Optional.of(activity));
 
@@ -209,7 +173,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP17 - Eliminar tarea inexistente")
+    @DisplayName("CP19 - Eliminar tarea inexistente")
     void deleteActivity_notFound_throwsException() {
         when(activityRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -217,35 +181,7 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP18 - Filtrar tareas por categoría")
-    void filterByCategory_withData_returnsFilteredPage() {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Activity> filteredPage = new PageImpl<>(List.of(activity));
-
-        when(activityRepository.findByCategory_Name("Estudios", pageable)).thenReturn(filteredPage);
-        when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
-
-        Page<ActivityResponse> result = activityService.filterByCategory("Estudios", pageable);
-
-        assertEquals(1, result.getContent().size());
-        assertEquals("Estudios", result.getContent().get(0).categoryName());
-    }
-
-    @Test
-    @DisplayName("CP19 - Filtrar tareas por categoría sin resultados")
-    void filterByCategory_noResults_returnsEmptyPage() {
-        Pageable pageable = PageRequest.of(0, 5);
-        Page<Activity> emptyPage = new PageImpl<>(Collections.emptyList());
-
-        when(activityRepository.findByCategory_Name("Inexistente", pageable)).thenReturn(emptyPage);
-
-        Page<ActivityResponse> result = activityService.filterByCategory("Inexistente", pageable);
-
-        assertTrue(result.getContent().isEmpty());
-    }
-
-    @Test
-    @DisplayName("CP20 - Ordenar tareas por prioridad")
+    @DisplayName("CP22 - Ordenar tareas por prioridad")
     void sortByPriority_returnsOrderedPage() {
         Activity lowPriority = new Activity();
         lowPriority.setPriority(1);
@@ -265,7 +201,35 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP21 - Marcar tarea como completada")
+    @DisplayName("CP023 - Listar tareas con paginación")
+    void paginateActivities_withData_returnsPage() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Activity> page = new PageImpl<>(List.of(activity));
+        Page<ActivityResponse> expectedPage = new PageImpl<>(List.of(activityResponse));
+
+        when(activityRepository.findAll(pageable)).thenReturn(page);
+        when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
+
+        Page<ActivityResponse> result = activityService.paginate(pageable);
+
+        assertEquals(1, result.getContent().size());
+        assertEquals("Estudiar Java", result.getContent().get(0).title());
+    }
+
+    @Test
+    @DisplayName("CP024 - Obtener tarea por ID válido")
+    void findActivityById_found_returnsActivity() {
+        when(activityRepository.findById(1)).thenReturn(Optional.of(activity));
+        when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
+
+        ActivityResponse result = activityService.findById(1);
+
+        assertEquals("Estudiar Java", result.title());
+        assertEquals("Estudios", result.categoryName());
+    }
+
+    @Test
+    @DisplayName("CP25 - Marcar tarea como completada")
     void markAsCompleted_validId_returnsCompletedTask() {
         Activity completedActivity = new Activity();
         completedActivity.setId(1);
@@ -285,10 +249,46 @@ public class ActivityServiceUnitTest {
     }
 
     @Test
-    @DisplayName("CP22 - Marcar tarea inexistente como completada")
+    @DisplayName("CP26 - Marcar tarea inexistente como completada")
     void markAsCompleted_notFound_throwsException() {
         when(activityRepository.findById(99)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> activityService.markAsCompleted(99));
+    }
+
+    @Test
+    @DisplayName("CP027 - Obtener tarea inexistente")
+    void findActivityById_notFound_throwsException() {
+        when(activityRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> activityService.findById(99));
+    }
+
+    @Test
+    @DisplayName("CP28 - Filtrar tareas por categoría")
+    void filterByCategory_withData_returnsFilteredPage() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Activity> filteredPage = new PageImpl<>(List.of(activity));
+
+        when(activityRepository.findByCategory_Name("Estudios", pageable)).thenReturn(filteredPage);
+        when(activityMapper.toResponse(activity)).thenReturn(activityResponse);
+
+        Page<ActivityResponse> result = activityService.filterByCategory("Estudios", pageable);
+
+        assertEquals(1, result.getContent().size());
+        assertEquals("Estudios", result.getContent().get(0).categoryName());
+    }
+
+    @Test
+    @DisplayName("CP29 - Filtrar tareas por categoría sin resultados")
+    void filterByCategory_noResults_returnsEmptyPage() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Activity> emptyPage = new PageImpl<>(Collections.emptyList());
+
+        when(activityRepository.findByCategory_Name("Inexistente", pageable)).thenReturn(emptyPage);
+
+        Page<ActivityResponse> result = activityService.filterByCategory("Inexistente", pageable);
+
+        assertTrue(result.getContent().isEmpty());
     }
 }
