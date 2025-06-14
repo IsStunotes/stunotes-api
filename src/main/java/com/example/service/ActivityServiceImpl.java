@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.dto.request.ActivityRequest;
 import com.example.dto.response.ActivityResponse;
+import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.ActivityMapper;
 import com.example.model.Activity;
 import com.example.model.Category;
@@ -33,7 +34,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional(readOnly = true)
     public ActivityResponse findById(Integer id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Actividad no encontrada"));
         return activityMapper.toResponse(activity);
     }
 
@@ -44,7 +45,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         if (request.categoryId() != null) {
             Category category = categoryRepository.findById(request.categoryId())
-                    .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
             activity.setCategory(category);
         }
 
@@ -57,13 +58,13 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional
     public ActivityResponse update(Integer id, ActivityRequest request) {
         Activity activityFromDb = activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Actividad no encontrada"));
 
         activityMapper.updateEntityFromRequest(activityFromDb, request);
 
         if (request.categoryId() != null) {
             Category category = categoryRepository.findById(request.categoryId())
-                    .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+                    .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
             activityFromDb.setCategory(category);
         }
 
@@ -75,7 +76,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional
     public void delete(Integer id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Actividad no encontrada"));
         activityRepository.delete(activity);
     }
 
@@ -97,7 +98,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional
     public ActivityResponse markAsCompleted(Integer taskId) {
         Activity activity = activityRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Actividad no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Actividad no encontrada"));
         activity.setFinishedAt(LocalDateTime.now());
         Activity updatedActivity = activityRepository.save(activity);
         return activityMapper.toResponse(updatedActivity);
