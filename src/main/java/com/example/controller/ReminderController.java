@@ -7,6 +7,7 @@ import com.example.service.ReminderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/reminder")
+@PreAuthorize("hasAnyRole('STUDENT','TEACHER')")
 public class ReminderController {
     private final ReminderService reminderService;
 

@@ -1,9 +1,9 @@
 package com.example.service;
 
-import com.example.dto.AuthResponseDTO;
-import com.example.dto.LoginDTO;
-import com.example.dto.UserProfileDTO;
-import com.example.dto.UserRegistrationDTO;
+import com.example.dto.response.AuthResponseDTO;
+import com.example.dto.request.LoginDTO;
+import com.example.dto.response.UserProfileDTO;
+import com.example.dto.request.UserRegistrationDTO;
 
 public interface UserService {
     UserProfileDTO registerStudent(UserRegistrationDTO registrationDTO);

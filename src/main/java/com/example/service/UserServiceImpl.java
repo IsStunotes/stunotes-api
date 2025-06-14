@@ -1,8 +1,9 @@
 package com.example.service;
-import com.example.dto.AuthResponseDTO;
-import com.example.dto.LoginDTO;
-import com.example.dto.UserProfileDTO;
-import com.example.dto.UserRegistrationDTO;
+import com.example.dto.response.AuthResponseDTO;
+import com.example.dto.request.LoginDTO;
+import com.example.dto.response.UserProfileDTO;
+import com.example.dto.request.UserRegistrationDTO;
+import com.example.exception.BadRequestException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.exception.RoleNotFoundException;
 import com.example.mapper.UserMapper;
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
                 userProfileDTO.getName(), userProfileDTO.getLastName(), id);
 
         if (existsAsStudent || existsAsTeacher) {
-            throw new IllegalArgumentException("Ya existe un usuario con el mismo nombre y apellido");
+            throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
         }
 
 
@@ -117,12 +118,16 @@ public class UserServiceImpl implements UserService {
         boolean existsAsStudent = studentRepository.existsByNameAndLastName(registrationDTO.getName(), registrationDTO.getLastName());
         boolean existsAsTeacher = teacherRepository.existsByNameAndLastName(registrationDTO.getName(), registrationDTO.getLastName());
 
+        if((existsAsStudent || existsAsTeacher) && existsByEmail) {
+            throw new BadRequestException("Ya existe un usuario con el mismo nombre, apellido y email");
+        }
+
         if (existsByEmail) {
-            throw new IllegalArgumentException("El email ya esta registrado");
+            throw new BadRequestException("El email ya esta registrado");
         }
 
         if (existsAsStudent || existsAsTeacher) {
-            throw new IllegalArgumentException("Ya existe un usuario con el mismo nombre y apellido");
+            throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
         }
 
         Role role = roleRepository.findByName(roleEnum)

@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.dto.request.CategoryRequest;
 import com.example.dto.response.CategoryResponse;
+import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.CategoryMapper;
 import com.example.model.Category;
 import com.example.repository.CategoryRepository;
@@ -41,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse findById(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con ID: " + id));
         return categoryMapper.toResponse(category);
     }
 
@@ -58,7 +59,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse update(Integer id, CategoryRequest request) {
         Category categoryFromDb = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con ID: " + id));
 
         categoryMapper.updateEntityFromRequest(categoryFromDb, request);
         categoryFromDb.setUpdatedAt(LocalDateTime.now());
@@ -71,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Integer id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con ID: " + id));
         categoryRepository.delete(category);
     }
 }

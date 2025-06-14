@@ -69,15 +69,20 @@ public class DocumentService {
         return documentRepository.findById(documentId)
                 .map(documentMapper::toResponse)
                 .map(DocumentResponse::comments)
-                .orElse(List.of());
+                .orElseThrow(() -> new RuntimeException("Documento no encontrado"));
     }
 
+
     public List<DocumentResponse> getDocumentsByRepositorioId(Long repositorioId) {
+        repositoryRepository.findById(repositorioId)
+                .orElseThrow(() -> new RuntimeException("Repositorio no encontrado"));
+
         return documentRepository.findByRepositorioId(repositorioId)
                 .stream()
                 .map(documentMapper::toResponse)
                 .toList();
     }
+
     //GET DOCUMENT POR ID DE USUARIO
     public List<DocumentResponse> getDocumentsByUserId(Integer userId) {
         return documentRepository.findByUsuarioId(userId)

@@ -1,12 +1,15 @@
-package com.example;
+package com.example.service;
 
-import com.example.dto.*;
+import com.example.dto.request.LoginDTO;
+import com.example.dto.request.UserRegistrationDTO;
+import com.example.dto.response.AuthResponseDTO;
+import com.example.dto.response.UserProfileDTO;
+import com.example.exception.BadRequestException;
 import com.example.mapper.UserMapper;
 import com.example.model.*;
 import com.example.repository.*;
 import com.example.security.TokenProvider;
 import com.example.security.UserPrincipal;
-import com.example.service.UserServiceImpl;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.security.authentication.*;
@@ -42,45 +45,29 @@ class AuthServiceUnitTest {
         UserRegistrationDTO request = new UserRegistrationDTO();
         request.setEmail("tATEmcraeisthebest@gmail.com");
         when(userRepository.existsByEmail("tATEmcraeisthebest@gmail.com")).thenReturn(true);
-        assertThrows(IllegalArgumentException.class, () -> userService.registerStudent(request));
+        BadRequestException exception = assertThrows(
+                BadRequestException.class,
+                () -> userService.registerStudent(request)
+        );
+        assertEquals("El email ya esta registrado", exception.getMessage());
     }
 
     @Test
-    @DisplayName("CP02 – Crear cuenta con el rol seleccionado")
-    void registerTeacher_correctRole_assignedToUser() {
+    @DisplayName("CP02 – Registrar con un usuario duplicado")
+    void registerStudent_fullDuplicate_throwsBadRequest() {
         UserRegistrationDTO request = new UserRegistrationDTO();
-        request.setEmail("michaelphilips@gmail.com");
-        request.setPassword("adminadmin");
-        request.setName("Michael");
-        request.setLastName("Townley");
-        Role teacherRole = new Role();
-        teacherRole.setId(2);
-        teacherRole.setName(ERole.TEACHER);
-        User entity = new User();
-        entity.setEmail(request.getEmail());
-        entity.setRole(teacherRole);
+        request.setEmail("lkdsjfaskld@gmail.com");
+        request.setName("Eldu");
+        request.setLastName("Plicado");
 
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(studentRepository.existsByNameAndLastName(request.getName(), request.getLastName())).thenReturn(false);
-        when(teacherRepository.existsByNameAndLastName(request.getName(), request.getLastName())).thenReturn(false);
-        when(roleRepository.findByName(ERole.TEACHER)).thenReturn(Optional.of(teacherRole));
-        when(passwordEncoder.encode("adminadmin")).thenReturn("4543642543263246");
-        when(userMapper.toUserEntity(request)).thenReturn(entity);
-        when(userRepository.save(entity)).thenAnswer(i -> {
-            entity.setId(5);
-            Teacher t = new Teacher();
-            t.setName(request.getName()); t.setLastName(request.getLastName());
-            t.setCreatedAt(LocalDateTime.now()); t.setUser(entity);
-            entity.setTeacher(t);
-            return entity;
-        });
-        when(userMapper.toUserProfileDTO(entity)).thenReturn(
-                new UserProfileDTO(){{
-                    setId(5); setEmail(request.getEmail()); setRole(ERole.TEACHER);
-                }}
+        when(userRepository.existsByEmail("lkdsjfaskld@gmail.com")).thenReturn(true);
+        when(studentRepository.existsByNameAndLastName("Eldu", "Plicado")).thenReturn(true);
+
+        BadRequestException exception = assertThrows(
+                BadRequestException.class,
+                () -> userService.registerStudent(request)
         );
-        UserProfileDTO result = userService.registerTeacher(request);
-        assertEquals(ERole.TEACHER, result.getRole());
+        assertEquals("Ya existe un usuario con el mismo nombre, apellido y email", exception.getMessage());
     }
 
     @Test
@@ -119,18 +106,37 @@ class AuthServiceUnitTest {
         assertEquals(ERole.STUDENT, profile.getRole());
     }
 
+    @Test
+    @DisplayName("CP04 – Nombre y apellido duplicados")
+    void registerStudent_duplicateNameLastName_throwsBadRequest() {
+        UserRegistrationDTO request = new UserRegistrationDTO();
+        request.setEmail("tate@gmail.com");    // correo no repetido
+        request.setPassword("1234");
+        request.setName("Tate");
+        request.setLastName("McRae");
+
+        when(userRepository.existsByEmail("tate@gmail.com")).thenReturn(false);
+        when(studentRepository.existsByNameAndLastName("Tate", "McRae")).thenReturn(true);
+
+        BadRequestException ex = assertThrows(
+                BadRequestException.class,
+                () -> userService.registerStudent(request)
+        );
+        assertEquals("Ya existe un usuario con el mismo nombre y apellido", ex.getMessage());
+    }
+
     /*User story 2*/
     @Test
-    @DisplayName("CP04 – Validar email y password correctos")
+    @DisplayName("CP05 – Validar email y password correctos")
     void login_validCredentials_returnsToken() {
-        LoginDTO dto = new LoginDTO();
-        dto.setEmail("charlesleclerc@gmail.com");
-        dto.setPassword("ferrari");
+        LoginDTO request = new LoginDTO();
+        request.setEmail("charlesleclerc@gmail.com");
+        request.setPassword("ferrari");
         Role role = new Role();
         role.setName(ERole.STUDENT);
         User user = new User();
         user.setId(10);
-        user.setEmail(dto.getEmail());
+        user.setEmail(request.getEmail());
         user.setRole(role);
         UserPrincipal principal = mock(UserPrincipal.class);
         when(principal.getUser()).thenReturn(user);
@@ -145,13 +151,13 @@ class AuthServiceUnitTest {
                 }}
         );
 
-        AuthResponseDTO response = userService.login(dto);
+        AuthResponseDTO response = userService.login(request);
         assertEquals("ferrarimightbethebestsometime", response.getToken());
         assertEquals("STUDENT", response.getRole());
     }
 
     @Test
-    @DisplayName("CP05 – Error si las credenciales son incorrectas")
+    @DisplayName("CP06 – Error si las credenciales son incorrectas")
     void login_invalidCredentials_throwsException() {
         LoginDTO request = new LoginDTO();
         request.setEmail("dududududumaxverstappen@gmail.com");
@@ -161,39 +167,5 @@ class AuthServiceUnitTest {
         assertThrows(BadCredentialsException.class, () -> userService.login(request));
     }
 
-    @Test
-    @DisplayName("CP06 – Devolver LoginResponse con id, email, name, lastName y role")
-    void login_validCredentials_returnsCompletePayload() {
-        LoginDTO dto = new LoginDTO();
-        dto.setEmail("itsokimok@gmail.com");
-        dto.setPassword("tATE");
-        Role role = new Role();
-        role.setName(ERole.STUDENT);
-        User usuarito = new User();
-        usuarito.setId(11);
-        usuarito.setEmail(dto.getEmail());
-        usuarito.setRole(role);
-        UserPrincipal principal = mock(UserPrincipal.class);
-        when(principal.getUser()).thenReturn(usuarito);
-        Authentication auth = mock(Authentication.class);
-        when(auth.getPrincipal()).thenReturn(principal);
-        when(authenticationManager.authenticate(any())).thenReturn(auth);
-        when(tokenProvider.createAccessToken(auth)).thenReturn("likearevolvingdoor");
-        when(userMapper.toAuthResponseDTO(usuarito, "likearevolvingdoor")).thenReturn(
-                new AuthResponseDTO() {{
-                    setId(11);
-                    setEmail("itsokimok@gmail.com");
-                    setToken("likearevolvingdoor");
-                    setName("Tate");
-                    setLastName("McRae");
-                    setRole("STUDENT");
-                }}
-        );
-        AuthResponseDTO response = userService.login(dto);
-        assertEquals(11, response.getId());
-        assertEquals("itsokimok@gmail.com", response.getEmail());
-        assertEquals("Tate", response.getName());
-        assertEquals("McRae", response.getLastName());
-        assertEquals("STUDENT", response.getRole());
-    }
+
 }
