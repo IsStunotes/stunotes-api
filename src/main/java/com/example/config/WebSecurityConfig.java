@@ -1,12 +1,14 @@
 package com.example.config;
-
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import com.example.security.JWTConfigurer;
 import com.example.security.JWTFilter;
 import com.example.security.JwtAuthenticationEntryPoint;
 import com.example.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -20,10 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
+import java.util.List;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -77,5 +77,18 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         // TODO: Proporciona el AuthenticationManager que gestionará la autenticación basada en los detalles de usuario y contraseña
         return authenticationConfiguration.getAuthenticationManager();
+    }
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:4200"));  // 🔁 Angular
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // métodos permitidos
+        config.setAllowedHeaders(List.of("*")); // cualquier cabecera (como Authorization)
+        config.setAllowCredentials(true); // necesario si usas JWT o cookies
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config); // se aplica a todos los endpoints
+
+        return new CorsFilter(source); // este filtro se activa automáticamente
     }
 }
