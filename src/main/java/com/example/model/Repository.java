@@ -19,7 +19,7 @@ public class Repository {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     @JsonManagedReference(value = "user-repositorio")
     private User usuario;
