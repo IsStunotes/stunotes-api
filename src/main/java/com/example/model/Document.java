@@ -22,6 +22,8 @@ public class Document {
     private Long id;
     @Column(unique = true, nullable = false)
     private String title;
+
+    @Column(length = 7500, nullable = false)
     private String description;
     private Long version;
     private LocalDateTime date_created;
