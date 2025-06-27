@@ -12,28 +12,31 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comments")
-@PreAuthorize("hasRole('TEACHER')")
 public class CommentController {
 
     @Autowired
     private CommentService commentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('TEACHER')")
     public List<CommentResponse> getAllComments() {
         return commentService.getAllComments();
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('TEACHER')")
     public CommentResponse saveComment(@RequestBody @Valid CommentRequest request) {
         return commentService.saveComment(request);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     public CommentResponse getCommentById(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('TEACHER')")
     public void deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
     }
@@ -44,6 +47,7 @@ public class CommentController {
     }
 
     @GetMapping("/usuario/{usuarioId}")
+    @PreAuthorize("hasRole('TEACHER')")
     public List<CommentResponse> getCommentsByUsuarioId(@PathVariable Integer usuarioId) {
         return commentService.getCommentsByUsuarioId(usuarioId);
     }
