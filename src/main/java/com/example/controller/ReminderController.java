@@ -27,10 +27,23 @@ public class ReminderController {
         return ResponseEntity.ok(reminderService.create(request));
     }
 
+    //Obtener todos los recordatorios del usuario
+    @GetMapping
+    public ResponseEntity<List<ReminderResponse>> getAll(){
+        return ResponseEntity.ok(reminderService.getAll());
+    }
+
     //Actualizacion de reminder
     @PutMapping("/{id}")
     public ResponseEntity<ReminderResponse> update (@PathVariable Integer id, @Valid @RequestBody ReminderRequest request){
         return ResponseEntity.ok(reminderService.update(id, request));
+    }
+
+    //Eliminacion de reminder
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete (@PathVariable Integer id){
+        reminderService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     //Consultar recordatorios para una semana

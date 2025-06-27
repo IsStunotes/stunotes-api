@@ -17,12 +17,15 @@ public class Reminder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="titulo", nullable = false)
+    private String titulo;
+
     @Column(name="DateTime",nullable = false)
     private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name="activity_id", referencedColumnName = "id",
-    foreignKey = @ForeignKey(name="FK_reminder_activities"))
+            foreignKey = @ForeignKey(name="FK_reminder_activities"))
     private Activity activity;
 
 }
