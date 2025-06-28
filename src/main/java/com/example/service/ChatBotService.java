@@ -25,7 +25,7 @@ public class ChatBotService {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(apiKey);
+            headers.set("Authorization", "Bearer " + apiKey);
 
             Map<String, Object> body = Map.of(
                     "model", "meta-llama/Meta-Llama-3-8B-Instruct",
