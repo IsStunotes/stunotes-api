@@ -13,6 +13,7 @@ public class ReminderMapper {
     public Reminder toEntity(ReminderRequest request, Activity activity){
         return Reminder.builder()
                 .id(request.id())
+                .titulo(request.titulo())
                 .dateTime(request.dateTime())
                 .activity(activity)
                 .build();
@@ -22,7 +23,8 @@ public class ReminderMapper {
     public ReminderResponse toResponse(Reminder reminder){
         return new ReminderResponse(
                 reminder.getId(),
-                reminder.getActivity().getTitle(),
+                reminder.getTitulo(),
+                reminder.getActivity() != null ? reminder.getActivity().getTitle() : null,
                 reminder.getDateTime()
         );
     }

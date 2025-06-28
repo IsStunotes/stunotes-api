@@ -35,16 +35,20 @@ public class ReminderService {
 
 
         //Validacion de datos nulos
-        if (request == null || request.dateTime() == null || request.activityId() == null){
-            throw new IllegalArgumentException("Faltan completar datos");
+        if (request == null || request.dateTime() == null || request.titulo() == null || request.titulo().trim().isEmpty()){
+            throw new IllegalArgumentException("Faltan completar datos obligatorios (título y fechaHora)");
         }
 
         if (request.dateTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("La fecha del recordatorio debe ser futura");
         }
-        //Validacion de existencia de actividad
-        Activity activity = activityRepository.findById(request.activityId())
-                .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
+
+        //Validacion de existencia de actividad (solo si se proporciona)
+        Activity activity = null;
+        if (request.activityId() != null) {
+            activity = activityRepository.findById(request.activityId())
+                    .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
+        }
 
         Reminder reminder = reminderMapper.toEntity(request, activity);
         return reminderMapper.toResponse(reminderRepository.save(reminder));
@@ -52,12 +56,24 @@ public class ReminderService {
 
 
 
+    //Obtener todos los recordatorios del usuario autenticado
+    @Transactional(readOnly = true)
+    public List<ReminderResponse> getAll() {
+        // Aquí deberías filtrar por usuario autenticado
+        // Por ahora obtiene todos, pero deberías agregar filtro por usuario
+        List<Reminder> reminders = reminderRepository.findAll();
+
+        return reminders.stream()
+                .map(reminderMapper::toResponse)
+                .toList();
+    }
+
     //Actualizacion de reminder
     @Transactional
     public ReminderResponse update (@NotNull Integer id, @NotNull ReminderRequest request){
         // Validacion de datos nulos
-        if (request == null || request.dateTime() == null || request.activityId() == null){
-            throw new IllegalArgumentException("Falta completar datos");
+        if (request == null || request.dateTime() == null || request.titulo() == null || request.titulo().trim().isEmpty()){
+            throw new IllegalArgumentException("Faltan completar datos obligatorios (título y fechaHora)");
         }
 
         // Busca el recordatorio existente
@@ -69,9 +85,12 @@ public class ReminderService {
             throw new IllegalStateException("No se puede editar un recordatorio después de su fecha programada");
         }
 
-        //Valida que la actividad exista
-        Activity activity = activityRepository.findById(request.activityId())
-                .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
+        //Valida que la actividad exista (solo si se proporciona)
+        Activity activity = null;
+        if (request.activityId() != null) {
+            activity = activityRepository.findById(request.activityId())
+                    .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
+        }
 
         Reminder updatedReminder = reminderMapper.toEntity(request, activity);
         updatedReminder.setId(existingReminder.getId());

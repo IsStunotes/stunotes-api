@@ -6,8 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public record ReminderRequest (
-    @NotNull Long id,
-    @NotNull(message = "Debe ser obligatorio") Integer activityId,
-    @NotNull(message = "Fecha y hora son obligatorios") LocalDateTime dateTime
+        Long id, // Ya no es obligatorio
+        @NotBlank(message = "El título del recordatorio es obligatorio") String titulo,
+        Integer activityId, // Ya no es obligatorio
+        @NotNull(message = "Fecha y hora son obligatorios") LocalDateTime dateTime
 )
 {}
