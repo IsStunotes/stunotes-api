@@ -15,7 +15,7 @@ public class Activity {
     @Column(name = "title", nullable = false, length = 100)
     private String title;
     @Column(name="description", columnDefinition = "TEXT")
-    private String description;
+    private String description; 
     @Column(name="created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "finished_at")
