@@ -13,7 +13,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>stunotes-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>stunotes-api</name>
     <description>stunotes-api</description>
 
@@ -87,6 +87,10 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
         <!-- JWT Tokens * -->
         <dependency>
@@ -119,7 +123,16 @@
             <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
