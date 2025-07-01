@@ -2,7 +2,6 @@ package com.example.controller;
 
 import com.example.dto.request.ActivityRequest;
 import com.example.dto.response.ActivityResponse;
-import com.example.model.Activity;
 import com.example.service.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 @PreAuthorize("hasAnyRole('STUDENT','TEACHER')")
+//@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowedHeaders = {"Authorization", "Content-Type"}, allowCredentials = "true", maxAge = 3600)
 public class ActivityController {
 
     private final ActivityService activityService;
@@ -34,7 +34,7 @@ public class ActivityController {
         }
 
         if ("priority".equalsIgnoreCase(sort)) {
-            return ResponseEntity.ok(activityService.sortByPriority(pageable));
+            return ResponseEntity.ok(activityService.sortByPriority_withId(pageable));
         }
 
         return ResponseEntity.ok(activityService.paginate(pageable));

@@ -13,44 +13,29 @@ import java.util.Map;
 @Service
 public class ChatBotService {
 
-    @Value("${huggingface.api.key}")
+    @Value("${open.router.api.key}")
     private String apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String infer(String message) {
-        try {
-            String url = "https://router.huggingface.co/featherless-ai/v1/completions";
+    public String infer(String prompt){
+        String url = "https://openrouter.ai/api/v1/chat/completions";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + apiKey);
+        Map<String, Object> body = Map.of(
+                "model", "mistralai/mistral-7b-instruct",
+                "messages", new Object[]{
+                        Map.of("role","user","content",
+                                "Responde la pregunta en un máximo de 200 carácteres. " +prompt)
+                },
+                "max_tokens", 200
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + apiKey);
-
-            Map<String, Object> body = Map.of(
-                    "model", "meta-llama/Meta-Llama-3-8B-Instruct",
-                    "prompt", message + "\nResponde como asistente, 20 palabras como máximo",
-                    "temperature", 0.5,
-                    "max_tokens", 60,
-                    "top_p", 1,
-                    "stop", List.of("Asistente:")
-            );
-
-            String jsonBody = objectMapper.writeValueAsString(body);
-            HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
-
-            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-            Map<String, Object> jsonMap = objectMapper.readValue(response.getBody(), Map.class);
-            List<Map<String, Object>> choices = (List<Map<String, Object>>) jsonMap.get("choices");
-            return ((String) choices.get(0).get("text")).trim();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error: " + e.getMessage();
+        );
+        HttpEntity<Map<String,Object>> request = new HttpEntity<>(body, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        return response.getBody();
         }
     }
 
 
-
-}
