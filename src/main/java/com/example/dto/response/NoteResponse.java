@@ -7,6 +7,8 @@ public record NoteResponse(
         String title,
         String content,
         LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        Integer collectionId,
         String collectionName
 ) {
 }

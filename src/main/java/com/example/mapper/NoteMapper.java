@@ -28,6 +28,8 @@ public class NoteMapper {
                 note.getTitle(),
                 note.getContent(),
                 note.getCreatedAt(),
+                note.getUpdatedAt(),
+                note.getCollection() != null? note.getCollection().getId() : null,
                 note.getCollection() != null ? note.getCollection().getName() : null
         );
     }
