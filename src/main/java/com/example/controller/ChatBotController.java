@@ -18,11 +18,8 @@ public class ChatBotController {
     private ChatBotService chatBotService;
 
     @PostMapping
-    public ResponseEntity<String> chat(@RequestBody Map<String, String> request) {
-        String prompt = request.get("message");
-        String respuesta = chatBotService.infer(prompt); // debe retornar solo texto
-
-        return ResponseEntity.ok(respuesta);
+    public String chat(@RequestBody String prompt){
+        return chatBotService.infer(prompt);
     }
 
 }
