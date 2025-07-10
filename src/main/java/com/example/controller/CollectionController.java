@@ -6,11 +6,8 @@ import com.example.model.Collection;
 import com.example.service.CollectionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.hibernate.collection.spi.CollectionSemanticsResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +27,14 @@ public class CollectionController {
         return ResponseEntity.ok(collectionService.findAll());
     }
 
-    @GetMapping("/paginated")
-    public ResponseEntity<Page<CollectionResponse>> getPaginated(Pageable pageable) {
-        return ResponseEntity.ok(collectionService.findAll(pageable));
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<List<CollectionResponse>> getCollectionsByUser_Id(@PathVariable("user_id") Integer user_id) {
+        return ResponseEntity.ok(collectionService.getCollectionsByUser_Id(user_id));
+    }
+
+    @GetMapping("/user/{user_id}/paginated")
+    public ResponseEntity<Page<CollectionResponse>> getPaginated(Pageable pageable, @PathVariable("user_id") Integer user_id) {
+        return ResponseEntity.ok(collectionService.getCollectionsByUser_Id(pageable, user_id));
     }
 
     @GetMapping("/{id}")

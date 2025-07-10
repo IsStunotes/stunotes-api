@@ -82,7 +82,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200", "https://isstunotes.github.io"));  // 🔁 Angular
+        config.setAllowedOrigins(List.of("http://localhost:4200", "https://stunotes-web.netlify.app/"));  // 🔁 Angular
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // métodos permitidos
         config.setAllowedHeaders(List.of("*")); // cualquier cabecera (como Authorization)
         config.setAllowCredentials(true); // necesario si usas JWT o cookies

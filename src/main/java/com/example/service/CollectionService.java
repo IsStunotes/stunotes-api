@@ -14,14 +14,14 @@ public interface CollectionService {
 
     List<CollectionResponse> findAll();
 
-    Page<CollectionResponse> findAll(Pageable pageable);
+    /*Page<CollectionResponse> findAll(Pageable pageable);*/
     CollectionResponse update(Integer id, CollectionRequest request);
     void delete(Integer id);
 
     CollectionResponse findById(Integer id);
 
-    /*Page<Collection> findAll(Integer userId, Pageable pageable);
-    List<Collection> findAllByUser(Integer userId);
-    Collection findById(Integer id);*/
+    Page<CollectionResponse> getCollectionsByUser_Id(Pageable pageable, Integer user_id);
+    List<CollectionResponse> getCollectionsByUser_Id(Integer user_id);
+
 
 }
