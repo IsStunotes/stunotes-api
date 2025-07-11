@@ -41,7 +41,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         passwordResetTokenRepository.save(passwordResetToken);
 
         Map<String, Object> model =new  HashMap<>();
-        String resetUrl = "http://localhost:4200/reset/" + passwordResetToken.getToken();
+        String resetUrl = "https://stunotes-web.netlify.app/reset/" + passwordResetToken.getToken();
         model.put("user", user.getEmail());
         model.put("resetUrl", resetUrl);
 
