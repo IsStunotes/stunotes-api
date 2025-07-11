@@ -21,40 +21,27 @@ import java.util.List;
 public class ReminderController {
     private final ReminderService reminderService;
 
-    //Creacion
     @PostMapping
     public ResponseEntity<ReminderResponse> create (@Valid @RequestBody ReminderRequest request){
         return ResponseEntity.ok(reminderService.create(request));
     }
 
-    //Obtener todos los recordatorios del usuario
     @GetMapping
     public ResponseEntity<List<ReminderResponse>> getAll(){
         return ResponseEntity.ok(reminderService.getAll());
     }
 
-    //Actualizacion de reminder
     @PutMapping("/{id}")
-    public ResponseEntity<ReminderResponse> update (@PathVariable Integer id, @Valid @RequestBody ReminderRequest request){
+    public ResponseEntity<ReminderResponse> update (@PathVariable Long id, @Valid @RequestBody ReminderRequest request){
         return ResponseEntity.ok(reminderService.update(id, request));
     }
 
-    //Eliminacion de reminder
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Integer id){
+    public ResponseEntity<Void> delete (@PathVariable Long id){
         reminderService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    //Consultar recordatorios para una semana
-    @GetMapping("/week")
-    public ResponseEntity<List<ReminderResponse>> getRemindersForWeek(
-            @RequestParam("start") String startDateString) {
-
-        LocalDate startDate = LocalDate.parse(startDateString, DateTimeFormatter.ISO_DATE);
-        List<ReminderResponse> reminders = reminderService.getRemindersForWeek(startDate);
-        return ResponseEntity.ok(reminders);
-    }
 
 }
 
