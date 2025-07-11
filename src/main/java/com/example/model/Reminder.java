@@ -28,4 +28,9 @@ public class Reminder {
             foreignKey = @ForeignKey(name="FK_reminder_activities"))
     private Activity activity;
 
+    @ManyToOne
+    @JoinColumn(name="user_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name="FK_reminder_user"))
+    private User user;
+
 }

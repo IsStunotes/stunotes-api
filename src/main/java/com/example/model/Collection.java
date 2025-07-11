@@ -24,9 +24,12 @@ public class Collection {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    /*@ManyToOne()
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @ManyToOne()
     @JoinColumn(name="user_id", referencedColumnName = "id",
         foreignKey = @ForeignKey(name = "FK_collections_users"))
     private User user;
-*/
+
 }

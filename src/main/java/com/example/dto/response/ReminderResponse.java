@@ -7,6 +7,7 @@ public record ReminderResponse (
         Long id,
         String titulo,
         String activityName,
-        LocalDateTime dateTime
+        LocalDateTime dateTime,
+        Integer activityId
 ){
 }
