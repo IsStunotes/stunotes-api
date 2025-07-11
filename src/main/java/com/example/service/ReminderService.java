@@ -7,11 +7,15 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.ReminderMapper;
 import com.example.model.Activity;
 import com.example.model.Reminder;
+import com.example.model.User;
 import com.example.repository.ActivityRepository;
 import com.example.repository.ReminderRepository;
+import com.example.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +31,18 @@ public class ReminderService {
     private final ReminderRepository reminderRepository;
     private final ActivityRepository activityRepository;
     private final ReminderMapper reminderMapper;
+    private final UserRepository userRepository;
 
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+    }
 
-    //Creación de Reminder
     @Transactional
     public ReminderResponse create(ReminderRequest request) {
 
-
-        //Validacion de datos nulos
         if (request == null || request.dateTime() == null || request.titulo() == null || request.titulo().trim().isEmpty()){
             throw new IllegalArgumentException("Faltan completar datos obligatorios (título y fechaHora)");
         }
@@ -43,25 +51,24 @@ public class ReminderService {
             throw new IllegalArgumentException("La fecha del recordatorio debe ser futura");
         }
 
-        //Validacion de existencia de actividad (solo si se proporciona)
+        User currentUser = getAuthenticatedUser();
+
         Activity activity = null;
         if (request.activityId() != null) {
             activity = activityRepository.findById(request.activityId())
                     .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
         }
 
-        Reminder reminder = reminderMapper.toEntity(request, activity);
+        Reminder reminder = reminderMapper.toEntity(request, activity, currentUser);
         return reminderMapper.toResponse(reminderRepository.save(reminder));
     }
 
 
 
-    //Obtener todos los recordatorios del usuario autenticado
     @Transactional(readOnly = true)
     public List<ReminderResponse> getAll() {
-        // Aquí deberías filtrar por usuario autenticado
-        // Por ahora obtiene todos, pero deberías agregar filtro por usuario
-        List<Reminder> reminders = reminderRepository.findAll();
+        User user = getAuthenticatedUser();
+        List<Reminder> reminders = reminderRepository.findByUserId(user.getId());
 
         return reminders.stream()
                 .map(reminderMapper::toResponse)
@@ -70,76 +77,48 @@ public class ReminderService {
 
     //Actualizacion de reminder
     @Transactional
-    public ReminderResponse update (@NotNull Integer id, @NotNull ReminderRequest request){
-        // Validacion de datos nulos
+    public ReminderResponse update (@NotNull Long id, @NotNull ReminderRequest request){
         if (request == null || request.dateTime() == null || request.titulo() == null || request.titulo().trim().isEmpty()){
             throw new IllegalArgumentException("Faltan completar datos obligatorios (título y fechaHora)");
         }
 
-        // Busca el recordatorio existente
         Reminder existingReminder = reminderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado con el id: " + id));
 
-        // Validar que la fecha no haya pasado
+        User user = getAuthenticatedUser();
+        if (!existingReminder.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("No tienes permisos para modificar este recordatorio");
+        }
+
         if (existingReminder.getDateTime().isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("No se puede editar un recordatorio después de su fecha programada");
         }
 
-        //Valida que la actividad exista (solo si se proporciona)
         Activity activity = null;
         if (request.activityId() != null) {
             activity = activityRepository.findById(request.activityId())
                     .orElseThrow(()-> new ResourceNotFoundException("Actividad no encontrada"));
         }
 
-        Reminder updatedReminder = reminderMapper.toEntity(request, activity);
+        Reminder updatedReminder = reminderMapper.toEntity(request, activity, user);
         updatedReminder.setId(existingReminder.getId());
         return reminderMapper.toResponse(reminderRepository.save(updatedReminder));
     }
 
-
-    //Eliiniar Reminder
     @Transactional
-    public void delete(@NotNull Integer id){
+    public void delete(@NotNull Long id) {
         Reminder reminder = reminderRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Recordatorio no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado"));
 
-        //validar que la fecha no haya pasado
+        User user = getAuthenticatedUser();
+        if (!reminder.getUser().getId().equals(user.getId())) {
+            throw new SecurityException("No tienes permisos para eliminar este recordatorio");
+        }
+
         if (reminder.getDateTime().isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("No se puede eliminar un recordatorio después de su fecha programada");
         }
 
         reminderRepository.delete(reminder);
     }
-
-    //Eliminación recordatorio después de fecha
-    @Transactional(readOnly = true)
-    public ReminderResponse getById(@NotNull Integer id) {
-        Reminder reminder = reminderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Recordatorio no encontrado"));
-
-        if (reminder.getDateTime().isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("El recordatorio ya venció y no se puede recuperar");
-        }
-
-        return reminderMapper.toResponse(reminder);
-    }
-
-
-
-
-    //Implementaciones para export
-    @Transactional(readOnly = true)
-    public List<ReminderResponse> getRemindersForWeek(LocalDate startDate) {
-        LocalDate endDate = startDate.plusDays(6); // semana desde el lunes (inclusive) hasta domingo
-
-        List<Reminder> reminders = reminderRepository.findByDateTimeBetween(
-                startDate.atStartOfDay(),
-                endDate.atTime(23, 59));
-
-        return reminders.stream()
-                .map(reminderMapper::toResponse)
-                .toList();
-    }
-
 }
